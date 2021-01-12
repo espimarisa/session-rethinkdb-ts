@@ -35,7 +35,7 @@ const store = new RethinkDBStore({
   connectOptions: {
     db: "db",
   },
-  sessionTable: "session", // RethinkDB table store session info to. Defaults to "session".
+  sessionTable: "session", // RethinkDB table to store session info to. Defaults to "session".
   sessionTimeout: 86400000, // How long a session ID is valid for. Defaults to 1 day.
   flushTimeout: 60000, // How long to wait before flushing data. Defaults to 1 minute.
 });

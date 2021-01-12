@@ -1,12 +1,22 @@
 {
   "name": "session-rethinkdb-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A modern RethinkDB session store for Express.",
   "author": "Espi <espi@riseup.net> (https://espi.me)",
   "license": "MIT",
   "homepage": "https://github.com/smolespi/session-rethinkdb-ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "express",
+    "expressjs",
+    "express-session",
+    "rethink",
+    "rethinkdb",
+    "rethinkdb-ts",
+    "session",
+    "session-store"
+  ],
   "bugs": {
     "url": "https://github.com/smolespi/session-rethinkdb-ts/issues"
   },
