@@ -1,3 +1,12 @@
 .eslintrc
 .gitattributes
+.gitignore
+.npmignore
 .prettierrc
+LICENSE
+package-lock.json
+README.md
+tsconfig.json
+.github/*
+node_modules/*
+src/*
