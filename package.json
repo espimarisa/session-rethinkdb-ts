@@ -1,6 +1,6 @@
 {
   "name": "session-rethinkdb-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A modern RethinkDB session store for Express.",
   "author": "Espi <espi@riseup.net> (https://espi.me)",
   "license": "MIT",
@@ -8,8 +8,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "./dist/",
-    "LICENSE"
+    "./dist/**/*"
   ],
   "keywords": [
     "express",
@@ -30,7 +29,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "npm run build",
     "test": "eslint . && tsc"
   },
   "dependencies": {
