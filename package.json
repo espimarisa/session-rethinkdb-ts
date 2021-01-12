@@ -7,6 +7,10 @@
   "homepage": "https://github.com/smolespi/session-rethinkdb-ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "./dist/",
+    "LICENSE"
+  ],
   "keywords": [
     "express",
     "expressjs",
@@ -26,7 +30,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublish": "tsc",
+    "prepublishOnly": "tsc",
     "test": "eslint . && tsc"
   },
   "dependencies": {
