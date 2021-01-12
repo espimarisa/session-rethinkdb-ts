@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "prepublish": "tsc",
-    "test": "eslint ."
+    "test": "eslint . && tsc"
   },
   "dependencies": {
     "express-session": "^1.17.1",
