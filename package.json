@@ -1,6 +1,6 @@
 {
   "name": "session-rethinkdb-ts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A modern RethinkDB session store for Express.",
   "author": "Espi <espi@riseup.net> (https://espi.me)",
   "license": "MIT",
