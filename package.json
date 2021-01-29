@@ -32,7 +32,7 @@
   "dependencies": {
     "express-session": "^1.17.1",
     "node-cache": "^5.1.2",
-    "rethinkdb-ts": "^2.4.5"
+    "rethinkdb-ts": "^2.4.6"
   },
   "devDependencies": {
     "@types/express-session": "^1.17.3",
