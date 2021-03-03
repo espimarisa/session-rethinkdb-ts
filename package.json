@@ -4,7 +4,7 @@
   "description": "A modern RethinkDB session store for Express.",
   "author": "Espi <espi@riseup.net> (https://espi.me)",
   "license": "MIT",
-  "homepage": "https://github.com/smolespi/session-rethinkdb-ts",
+  "homepage": "https://github.com/sysdotini/session-rethinkdb-ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
@@ -18,11 +18,11 @@
     "session-store"
   ],
   "bugs": {
-    "url": "https://github.com/smolespi/session-rethinkdb-ts/issues"
+    "url": "https://github.com/sysdotini/session-rethinkdb-ts/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smolespi/session-rethinkdb-ts.git"
+    "url": "git+https://github.com/sysdotini/session-rethinkdb-ts.git"
   },
   "scripts": {
     "build": "tsc",
