@@ -12,19 +12,34 @@ import NodeCache from "node-cache";
 import session from "express-session";
 const cache = new NodeCache();
 
-export class RethinkDBStore extends session.Store {
-  options: Record<string, unknown>;
-  db: typeof r;
-  sessionTimeout: number | undefined;
-  sessionTable: string | undefined;
+// Session connection options
+interface SessionOptions {
+  // The ReQL table to store sessions. Defaults to "session".
+  table?: string | "session";
 
-  constructor(options: RPoolConnectionOptions) {
+  // The timeout (in ms) in which sessions should timeout. Defaults to 1 day.
+  sessionTimeout?: number | 86400000;
+
+  // The interval (in ms) that which sessions should be flushed.
+  flushInterval?: number | 60000;
+
+  // ReQL connection options.
+  connectOptions?: RPoolConnectionOptions;
+}
+
+export class RethinkDBStore extends session.Store {
+  options: SessionOptions;
+  db: typeof r;
+  sessionTimeout?: number;
+  sessionTable?: string;
+
+  constructor(options: SessionOptions) {
     options = options || {};
     options.connectOptions = options.connectOptions || {};
-    super(options as Record<string, unknown>);
+    super(options as any);
 
     this.db = r;
-    this.emit("connecting");
+    this.emit("connect");
 
     // Default session timeout is 1 day
     this.sessionTimeout = options.sessionTimeout || 86400000;
@@ -38,7 +53,6 @@ export class RethinkDBStore extends session.Store {
         console.error(err);
         return null;
       }
-      // Defaults to flushing every minute
     }, options.flushInterval || 60000);
   }
 
