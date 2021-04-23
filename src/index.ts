@@ -33,12 +33,12 @@ export class RethinkDBStore extends session.Store {
   sessionTimeout?: number;
   sessionTable?: string;
 
-  constructor(options: SessionOptions) {
+  constructor(options: SessionOptions, rInstance?: typeof r) {
     options = options || {};
     options.connectOptions = options.connectOptions || {};
     super(options as any);
 
-    this.db = r;
+    this.db = rInstance ?? r;
     this.emit("connect");
 
     // Default session timeout is 1 day
