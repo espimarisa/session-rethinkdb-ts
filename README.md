@@ -6,7 +6,7 @@ A modern RethinkDB session store for Express.
 
 ```sh
 # npm
-npm i session-rethinkdb-ts
+npm i --save session-rethinkdb-ts
 
 # yarn
 yarn add session-rethinkdb-ts

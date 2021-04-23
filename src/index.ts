@@ -39,7 +39,7 @@ export class RethinkDBStore extends session.Store {
     super(options as any);
 
     this.db = rInstance ?? r;
-    this.emit("connect");
+    this.emit("connecting");
 
     // Default session timeout is 1 day
     this.sessionTimeout = options.sessionTimeout || 86400000;
