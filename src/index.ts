@@ -1,7 +1,7 @@
 /**
  * @file session-rethinkdb-ts
  * @description A modern RethinkDB session store for Express.
- * @author Espi <espi@riseup.net>
+ * @author sysdotini <espi@riseup.net>
  * @license MIT
  */
 
@@ -28,22 +28,27 @@ interface SessionOptions {
 }
 
 export class RethinkDBStore extends session.Store {
-  options: SessionOptions;
-  db: typeof r;
-  sessionTimeout?: number;
-  sessionTable?: string;
+  readonly db: typeof r;
+  readonly sessionTimeout: number;
+  readonly sessionTable: string;
+
+  /**
+   * Creates a new rethinkdb session store
+   * @param options RethinkDB options
+   * @param rInstance An optional existing instance to use
+   */
 
   constructor(options: SessionOptions, rInstance?: typeof r) {
-    options = options || {};
-    options.connectOptions = options.connectOptions || {};
+    options = options ?? {};
+    options.connectOptions = options.connectOptions ?? {};
     super(options as any);
 
     this.db = rInstance ?? r;
     this.emit("connecting");
 
     // Default session timeout is 1 day
-    this.sessionTimeout = options.sessionTimeout || 86400000;
-    this.sessionTable = options.table || "session";
+    this.sessionTimeout = options.sessionTimeout ?? 86400000;
+    this.sessionTable = options.table ?? "session";
 
     // Expiration flushing
     setInterval(() => {
@@ -83,7 +88,7 @@ export class RethinkDBStore extends session.Store {
       .run()
       .then((data) => {
         let sdata = null;
-        if (data.changes[0] != null) sdata = data.changes[0].new_val || null;
+        if (data.changes?.[0] != null) sdata = data.changes[0].new_val || null;
         if (sdata) cache.set(`sess-${sdata.id}`, sdata, 30000);
         if (typeof fn === "function") return fn();
 

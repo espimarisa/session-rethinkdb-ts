@@ -1,10 +1,13 @@
+.editorconfig
 .eslintrc
+.eslintignore
 .gitattributes
 .gitignore
 .npmignore
 .prettierrc
 LICENSE
 package-lock.json
+pnpm-lock.yaml
 README.md
 tsconfig.json
 .github/*

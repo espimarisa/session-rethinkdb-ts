@@ -10,11 +10,14 @@ npm i --save session-rethinkdb-ts
 
 # yarn
 yarn add session-rethinkdb-ts
+
+# pnpm
+pnpm add session-rethinkdb-ts
 ```
 
 ## Usage
 
-For a list of valid connectOptions, see the [typings][options] for rethinkdb-ts.
+For a list of valid connectOptions, see the [typings][options] for rethinkdb-ts. Additionally, you can pass an already existing store via the 2nd paramater.
 
 ```TS
 // If you're using TS/ESM
