@@ -5,6 +5,7 @@
 .gitignore
 .npmignore
 .prettierrc
+.prettierignore
 LICENSE
 package-lock.json
 pnpm-lock.yaml

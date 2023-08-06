@@ -1,22 +1,35 @@
-name: Push
+name: "Push Testing"
 
 on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [20.x]
+        os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2.3.4
-      - name: Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v2.1.5
+      # Checks out git
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Installs PNPM
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      # Sets Node.js up
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Testing
+          cache: "pnpm"
+
+      # Runs any test scripts
+      - name: Unit Tests
         run: |
-          npm install
-          npm test --if-present
+          pnpm install
+          pnpm test --if-present
         env:
           CI: true

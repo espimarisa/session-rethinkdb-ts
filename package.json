@@ -1,10 +1,10 @@
 {
   "name": "session-rethinkdb-ts",
   "version": "1.1.1",
-  "description": "A modern RethinkDB session store for Express.",
-  "author": "sysdotini <espi@riseup.net> (https://espi.me)",
+  "description": "A RethinkDB express-session store.",
+  "author": "Espi Marisa <contact@espi.me> (https://espi.me)",
   "license": "MIT",
-  "homepage": "https://github.com/sysdotini/session-rethinkdb-ts",
+  "homepage": "https://github.com/espimarisa/session-rethinkdb-ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
@@ -18,11 +18,11 @@
     "session-store"
   ],
   "bugs": {
-    "url": "https://github.com/sysdotini/session-rethinkdb-ts/issues"
+    "url": "https://github.com/espimarisa/session-rethinkdb-ts/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sysdotini/session-rethinkdb-ts.git"
+    "url": "git+https://github.com/espimarisa/session-rethinkdb-ts.git"
   },
   "scripts": {
     "build": "tsc",
@@ -30,20 +30,23 @@
     "test": "eslint . && tsc"
   },
   "dependencies": {
-    "express-session": "^1.17.1",
+    "express-session": "^1.17.3",
     "node-cache": "^5.1.2",
-    "rethinkdb-ts": "^2.4.9"
+    "rethinkdb-ts": "^2.5.4"
   },
   "devDependencies": {
-    "@sysdotini/eslint-config": "^1.0.2",
-    "@types/express-session": "^1.17.3",
-    "@types/node": "^14.14.41",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
-    "eslint": "^7.24.0",
-    "eslint-config-prettier": "^8.2.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.4"
+    "@types/express-session": "^1.17.7",
+    "@types/node": "^14.18.54",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "npm:eslint-plugin-i@2.28.0-2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-unicorn": "^48.0.1",
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6"
   }
 }
