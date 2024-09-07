@@ -2,7 +2,7 @@
 
 A RethinkDB express-session store.
 
-## Maintenence Mode
+## Maintenance Mode
 
 This package is in maintenence mode and will only recieve security and major bug-fix updates.
 
