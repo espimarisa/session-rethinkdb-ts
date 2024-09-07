@@ -2,10 +2,14 @@
 
 A RethinkDB express-session store.
 
+## Maintenence Mode
+
+This package is in maintenence mode and will only recieve security and major bug-fix updates.
+
 ## Installation
 
 ```sh
-pnpm add session-rethinkdb-ts
+bun add session-rethinkdb-ts
 ```
 
 ## Usage
