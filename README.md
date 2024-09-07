@@ -4,7 +4,7 @@ A RethinkDB express-session store.
 
 ## Maintenance Mode
 
-This package is in maintenence mode and will only recieve security and major bug-fix updates.
+This package is in maintenance mode and will only recieve security and major bug-fix updates.
 
 ## Installation
 
