@@ -1,7 +1,6 @@
 {
   "name": "session-rethinkdb-ts",
   "version": "1.2.3",
-  "private": true,
   "description": "A RethinkDB session store for express-session.",
   "keywords": [
     "express",
