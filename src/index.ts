@@ -1,131 +1,241 @@
+/**
+ * @file session-rethinkdb-ts
+ * @description A RethinkDB session store for express-session.
+ * @author Espi Marisa <contact@espi.me>
+ * @license zlib
+ */
+
 import type { SessionData } from "express-session";
 import { Store } from "express-session";
 import NodeCache from "node-cache";
 import type { RPoolConnectionOptions } from "rethinkdb-ts";
 import { r } from "rethinkdb-ts";
+
 const cache = new NodeCache();
 
-// Session connection options
-interface SessionOptions {
-	// The ReQL table to store sessions. Defaults to "session".
-	table?: "session";
+/**
+ * session-rethinkdb-ts session options.
+ */
 
-	// The timeout (in ms) in which sessions should timeout. Defaults to 1 day.
-	sessionTimeout?: number;
+export type SessionOptions = {
+  /**
+   * The ReQL table to store data to.
+   * @default session
+   */
 
-	// The interval (in ms) that which sessions should be flushed.
-	flushInterval?: number;
+  table?: "session";
 
-	// ReQL connection options.
-	connectOptions?: RPoolConnectionOptions;
+  /**
+   * The timeout (in ms) in which sessions should timeout.
+   * @default 60000
+   */
+
+  sessionTimeout?: number;
+
+  // The interval (in ms) that which sessions should be flushed.
+
+  /**
+   * The interval (in ms) in which sessions should be flushed.
+   * @default 86400000
+   */
+
+  flushInterval?: number;
+
+  /**
+   * An object of ReQL connection options.
+   * @default {}
+   */
+
+  connectOptions?: RPoolConnectionOptions;
+};
+
+/**
+ * session-rethinkdb-ts stored session data.
+ */
+
+export interface StoredSessionData extends SessionData {
+  /**
+   * The ID of the session returned.
+   */
+
+  id?: string;
+
+  /**
+   * A string containing session information.
+   */
+
+  session?: string;
 }
 
-interface StoredSessionData extends SessionData {
-	id?: string;
-	session?: string;
-}
-
-type PossibleStoredSessionData = StoredSessionData | undefined;
+/** Possible stored session data for session-rethinkdb-ts. */
+export type PossibleStoredSessionData = StoredSessionData | undefined;
 
 export class RethinkDBStore extends Store {
-	readonly db: typeof r;
-	readonly sessionTimeout: number;
-	readonly sessionTable: string;
+  readonly db: typeof r;
+  readonly sessionTimeout: number;
+  readonly sessionTable: string;
 
-	/**
-	 * Creates a new rethinkdb session store
-	 * @param options RethinkDB options
-	 * @param rInstance An optional existing instance to use
-	 */
+  /**
+   * Creates a new RethinkDB session store.
+   * @param options RethinkDB options to pass to the store.
+   * @param rInstance An optional existing instance to connect to.
+   */
 
-	constructor(options: SessionOptions, rInstance?: typeof r) {
-		options.connectOptions = options.connectOptions ?? {};
-		super();
+  constructor(options: SessionOptions, rInstance?: typeof r) {
+    options.connectOptions = options.connectOptions ?? {};
+    super();
 
-		this.db = rInstance ?? r;
-		this.emit("connecting");
+    this.db = rInstance ?? r;
+    this.emit("connecting");
 
-		// Default session timeout is 1 day
-		this.sessionTimeout = options.sessionTimeout ?? 86_400_000;
-		this.sessionTable = options.table ?? "session";
+    // Default session timeout is 1 day.
+    this.sessionTimeout = options.sessionTimeout ?? 86_400_000;
+    this.sessionTable = options.table ?? "session";
 
-		// Expiration flushing
-		setInterval(() => {
-			try {
-				this.db.table(this.sessionTable).filter(this.db.row("expires").lt(this.db.now().toEpochTime().mul(1000)));
-			} catch (error) {
-				console.error(error);
-				return;
-			}
-		}, options.flushInterval ?? 60_000);
-	}
+    // Expiration flushing.
+    setInterval(() => {
+      this.db.table(this.sessionTable).filter(
+        // Sets the expiry on the row.
+        this.db
+          .row("expires")
+          .lt(this.db.now().toEpochTime().mul(1000)),
+      );
+    }, options.flushInterval ?? 60_000);
+  }
 
-	// Gets a session
-	public get(id: string, fn: (arg0?: string, arg1?: PossibleStoredSessionData) => unknown) {
-		const sessionData: PossibleStoredSessionData = cache.get(`sess-${id}`);
+  /**
+   * Gets a session.
+   * @param sessionID The session ID to get.
+   * @param fn Session callback function.
+   * @returns An object of found session information or undefined.
+   */
 
-		if (sessionData?.session) {
-			const parsedData = JSON.parse(sessionData.session) as StoredSessionData | undefined;
-			fn(undefined, parsedData);
-			return;
-		}
+  async get(
+    sessionID: string,
+    fn: (arg0?: unknown, arg1?: PossibleStoredSessionData) => unknown,
+  ) {
+    // Finds the session data.
+    const sessionData = cache.get(
+      `sess-${sessionID}`,
+    ) satisfies PossibleStoredSessionData;
 
-		this.db
-			.table(this.sessionTable)
-			.get(id)
-			.run()
-			.then((data: PossibleStoredSessionData) =>
-				fn(undefined, data?.session ? (JSON.parse(data.session) as PossibleStoredSessionData) : undefined),
-			)
-			.catch((error: string) => fn(error));
-	}
+    // If no session data is found, return undefined.
+    if (!sessionData) {
+      return;
+    }
 
-	// Sets a session
-	public set(id: string, sess: SessionData, fn: (arg0?: unknown) => unknown) {
-		const sessionToStore = {
-			id: id,
-			expires: Date.now() + (sess.cookie.originalMaxAge ?? this.sessionTimeout),
-			session: JSON.stringify(sess),
-		};
+    // Parses the session data if it exists.
+    if (sessionData?.session) {
+      const parsedData = JSON.parse(sessionData.session) satisfies
+        | StoredSessionData
+        | undefined;
 
-		this.db
-			.table(this.sessionTable)
-			.insert(sessionToStore, { conflict: "replace", returnChanges: true })
-			.run()
-			.then((data) => {
-				let sessionData: PossibleStoredSessionData;
-				if (data.changes?.[0]) {
-					sessionData = data.changes[0]?.new_val as StoredSessionData;
-				}
+      // Returns the session data.
+      fn(undefined, parsedData ?? undefined);
+      return;
+    }
 
-				if (sessionData) {
-					cache.set(`sess-${sessionData.id}`, sessionData, 30_000);
-				}
+    // Gets the session data from the database.
+    try {
+      await this.db
+        .table(this.sessionTable)
+        .get(sessionID)
+        .run()
+        .then((data: PossibleStoredSessionData) => {
+          // Runs the callback function.
+          if (typeof fn === "function") {
+            fn(
+              undefined,
+              data?.session
+                ? (JSON.parse(data.session) as PossibleStoredSessionData)
+                : undefined,
+            );
+          }
 
-				if (typeof fn === "function") {
-					return fn();
-				}
+          return;
+        });
+    } catch (err) {
+      fn(err);
+    }
+  }
 
-				return;
-			})
-			.catch((error) => fn(error));
-	}
+  /**
+   * Sets session data.
+   * @param sessionID The session ID to set.
+   * @param data An object of session data to set.
+   * @param fn Session callback function.
+   */
 
-	// Destroys a session
-	public destroy(id: string, fn: (arg0?: unknown) => unknown) {
-		cache.del(`sess-${id}`);
-		this.db
-			.table(this.sessionTable)
-			.get(id)
-			.delete()
-			.run()
-			.then(() => {
-				if (typeof fn === "function") {
-					return fn();
-				}
+  async set(
+    sessionID: string,
+    data: SessionData,
+    fn: (arg0?: unknown) => unknown,
+  ) {
+    // Creates the session data.
+    const sessionToStore = {
+      id: sessionID,
+      expires: Date.now() + (data.cookie.originalMaxAge ?? this.sessionTimeout),
+      session: JSON.stringify(data),
+    };
 
-				return;
-			})
-			.catch((error) => fn(error));
-	}
+    // Inserts the session data to the database.
+    try {
+      await this.db
+        .table(this.sessionTable)
+        .insert(sessionToStore, { conflict: "replace", returnChanges: true })
+        .run()
+        .then((session) => {
+          let sessionData: PossibleStoredSessionData;
+
+          // Checks for changes.
+          if (session.changes?.[0]) {
+            sessionData = session.changes[0]
+              ?.new_val satisfies StoredSessionData;
+          }
+
+          // Updates the cache.
+          if (sessionData) {
+            cache.set(`sess-${sessionData.id}`, sessionData, 30_000);
+          }
+
+          // Runs the callback function.
+          if (typeof fn === "function") {
+            return fn();
+          }
+
+          return;
+        });
+    } catch (err) {
+      fn(err);
+    }
+  }
+
+  /**
+   * Destroys a session.
+   * @param sessionID The ID of the session to destroy.
+   * @param fn Session callback function.
+   */
+
+  async destroy(sessionID: string, fn: (arg0?: unknown) => unknown) {
+    cache.del(`sess-${sessionID}`);
+
+    try {
+      // Deletes the session data.
+      await this.db
+        .table(this.sessionTable)
+        .get(sessionID)
+        .delete()
+        .run()
+        .then(() => {
+          // Runs the callback function.
+          if (typeof fn === "function") {
+            return fn();
+          }
+
+          return;
+        });
+    } catch (err) {
+      fn(err);
+    }
+  }
 }

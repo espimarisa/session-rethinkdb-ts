@@ -1,47 +1,60 @@
 {
-	"name": "session-rethinkdb-ts",
-	"version": "1.2.2",
-	"description": "A RethinkDB express-session store.",
-	"author": "Espi Marisa <contact@espi.me> (https://espi.me)",
-	"license": "MIT",
-	"homepage": "https://github.com/espimarisa/session-rethinkdb-ts",
-	"main": "dist/src/index.js",
-	"types": "dist/src/index.d.ts",
-	"type": "module",
-	"packageManager": "bun@1.1.26",
-	"keywords": [
-		"express",
-		"expressjs",
-		"express-session",
-		"rethink",
-		"rethinkdb",
-		"rethinkdb-ts",
-		"session",
-		"session-store"
-	],
-	"bugs": {
-		"url": "https://github.com/espimarisa/session-rethinkdb-ts/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/espimarisa/session-rethinkdb-ts.git"
-	},
-	"scripts": {
-		"build": "tsc",
-		"prepublishOnly": "tsc",
-		"test": "biome lint"
-	},
-	"dependencies": {
-		"express-session": "^1.18.0",
-		"node-cache": "^5.1.2",
-		"rethinkdb-ts": "^2.6.1"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
-		"@types/express-session": "^1.18.0",
-		"@types/node": "^22.5.4",
-		"bun-types": "^1.1.26",
-		"typescript": "^5.5.4"
-	},
-	"trustedDependencies": ["@biomejs/biome", "esbuild"]
+  "name": "session-rethinkdb-ts",
+  "version": "1.2.3",
+  "private": true,
+  "description": "A RethinkDB session store for express-session.",
+  "keywords": [
+    "express",
+    "expressjs",
+    "express-session",
+    "rethink",
+    "rethinkdb",
+    "rethinkdb-ts",
+    "session",
+    "session-store"
+  ],
+  "homepage": "https://github.com/espimarisa/session-rethinkdb-ts",
+  "bugs": {
+    "url": "https://github.com/espimarisa/session-rethinkdb-ts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:espimarisa/session-rethinkdb-ts.git"
+  },
+  "license": "zlib",
+  "author": {
+    "name": "Espi Marisa",
+    "email": "contact@espi.me",
+    "url": "https://espi.me"
+  },
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "format": "biome format --fix .",
+    "lint": "biome check .",
+    "lint:fix": "biome lint --fix .",
+    "prepublishOnly": "tsc",
+    "test": "tsc --noEmit && biome lint"
+  },
+  "dependencies": {
+    "express-session": "^1.18.1",
+    "node-cache": "^5.1.2",
+    "rethinkdb-ts": "^2.7.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.0-beta.3",
+    "@types/express-session": "^1.18.1",
+    "bun-types": "^1.2.13",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "bun@1.2.13",
+  "engines": {
+    "bun": ">=1.2.13"
+  },
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "esbuild"
+  ]
 }
