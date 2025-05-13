@@ -30,12 +30,12 @@
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "NODE_ENV=production tsc",
     "format": "biome format --fix .",
     "lint": "biome check .",
     "lint:fix": "biome lint --fix .",
-    "prepublishOnly": "tsc",
-    "test": "tsc --noEmit && biome lint"
+    "prepublishOnly": "bun run build",
+    "test": "NODE_ENV=test tsc --noEmit && biome lint"
   },
   "dependencies": {
     "express-session": "^1.18.1",
